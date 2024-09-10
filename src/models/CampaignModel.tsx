@@ -29,7 +29,7 @@ enum Platform {
 
 enum ContentType {
 	AdCampaign = 'Ad Campaign',
-	SocialPost = 'Social Post',
+	SocialPost = 'Social Media Post',
 	Story = 'Story',
 }
 
@@ -47,8 +47,16 @@ const CampaignSchema: Schema<Campaign> = new Schema({
 		type: String,
 		required: [true, "Campaign name is required"],
 	},
-  contentType: ContentType,
-	platform: Platform,
+	contentType: {
+		type: String,
+		enum: ["Ad Campaign", "Social Media Post", "Story"],
+		required: [true, "Content type is required"],
+	},
+	platform: {
+		type: String,
+		enum: ["Facebook", "Instagram", "LinkedIn", "Twitter"],
+		required: [true, "Platform is required"],
+	},
 	objective: {
 		type: String,
 		required: [true, "Objective is required"],
@@ -74,5 +82,6 @@ const CampaignSchema: Schema<Campaign> = new Schema({
 	},
 });
 
-const CampaignSocialMediaPostModel = mongoose.model<Campaign>('Campaign', CampaignSchema);
+
+const CampaignSocialMediaPostModel = mongoose.models.Campaign || mongoose.model<Campaign>('Campaign', CampaignSchema);
 export default CampaignSocialMediaPostModel;

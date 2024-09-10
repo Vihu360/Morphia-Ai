@@ -25,3 +25,17 @@ body {
     text-wrap: balance;
   }
 }
+
+html,body {
+	width: 100%;
+	height: 100%;
+}
+
+#root {
+	position: fixed;
+}
+
+
+
+
+/* styles/globals.css or a specific CSS module */

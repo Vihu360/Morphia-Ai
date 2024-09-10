@@ -12,8 +12,28 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      keyframes: {
+        float: {
+          "0%, 100%": {
+            transform: "translateY(0)",
+          },
+          "50%": {
+            transform: "translateY(-20px)",
+          },
+        },
+      },
+      animation: {
+        float: "float 6s ease-in-out infinite",
+      },
+      width: {
+        "1/6": "16.67vw", // 1/6 of the viewport width
+      },
+      height: {
+        "60vh": "60vh", // 60% of the viewport height
+      },
     },
   },
   plugins: [],
 };
+
 export default config;
