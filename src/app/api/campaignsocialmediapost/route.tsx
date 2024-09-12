@@ -14,9 +14,13 @@ export async function POST(request: NextRequest) {
 
 		const { brandName, platform, contentType, objective } = await request.json();
 
+		console.log(" fetched data from ui ",brandName, platform, contentType, objective);
+
 		if (!user) {
 			return NextResponse.json({ success: false, message: "User not found" }, { status: 400 });
 		}
+
+		console.log(user);
 
 		const brandNameToSelect = brandName;
 
