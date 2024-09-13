@@ -10,6 +10,8 @@ export async function POST(request: Request) {
 
 		const { email, code } = await request.json()
 
+		console.log("email, code", email, code)
+
 		const user = await UserModel.findOne({ email: email })
 
 		console.log(user)

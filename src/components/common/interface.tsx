@@ -5,11 +5,9 @@ import { useForm } from 'react-hook-form';
 import axios, { AxiosError } from 'axios'
 import { useToast } from '@/components/ui/use-toast';
 import { apiResponse } from '@/types/ApiResponse';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 
-const Page = () => {
+const Interface = () => {
 	const { register, handleSubmit } = useForm();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [selectedPlatform, setSelectedPlatform] = useState('');
@@ -17,10 +15,8 @@ const Page = () => {
 
 	const { toast } = useToast();
 
-
 	const onSubmit = async (data: any) => {
 		setIsSubmitting(true);
-
 
 		try {
 
@@ -51,7 +47,10 @@ const Page = () => {
 				description: errorMessage,
 				variant: 'destructive',
 			})
+
 			setIsSubmitting(false);
+
+
 		}
 	}
 
@@ -68,8 +67,8 @@ const Page = () => {
 	};
 
 	return (
-		<div className='w-screen h-screen bg-pink-300 flex justify-center items-center py-12'>
-			<div className={`h-full w-[90%] bg-black md:shadow-2xl md:shadow-slate-800 flex border-2 border-black rounded-3xl ${isSubmitting ? 'blur-sm' : ''}`}>
+		<div className='w-screen h-screen bg-[#eceeed] flex justify-center items-center py-12'>
+			<div className={`h-full w-[90%] bg-black flex border-2 border-black rounded-3xl ${isSubmitting ? 'blur-sm' : ''}`}>
 
 				{/* Sidebar */}
 
@@ -86,10 +85,10 @@ const Page = () => {
 					</div>
 				</div>
 
-
 				{/* Main Content */}
-				<div className='h-full w-5/6 flex justify-center items-center'>
-					<div className='w-full h-[85%] rounded-tl-3xl rounded-br-3xl bg-[#000]'>
+				<div className='h-full w-5/6'>
+					<div className='w-full h-[15%]'></div>
+					<div className='w-full h-[85%] rounded-tl-3xl rounded-br-3xl bg-[#1c1c1c]'>
 						<div className='w-full h-[15%] flex items-center justify-between px-8'>
 							<div className='flex items-center text-white gap-3'>
 								<IconBrandPatreonFilled stroke={2} size={30} color='white' />
@@ -105,61 +104,13 @@ const Page = () => {
 
 						{/* Form Section */}
 
-						<div className='w-full h-[85%] bg-black rounded-br-3xl flex'>
+						<div className='w-full h-[85%] bg-[#eceeed] rounded-br-3xl flex'>
 
-							<div className='h-full w-[60%] border-white flex justify-center items-center'>
+							<div className='h-full w-[60%] border flex justify-center items-center'>
 
-								<form onSubmit={handleSubmit(onSubmit)} className={`grid grid-cols-2 gap-4 p-6 ${isSubmitting ? 'blur-sm' : ''}`}>
-
-									{/* Platform Selection */}
-
-									<div className='pl-7'>
-
-										<p className='text-neutral-200 font-medium text-lg pb-3'>Choose Platform :</p>
-
-										<div className='flex gap-4 col-span-4 '>
-
-											{['Twitter', 'Instagram', 'Meta', 'LinkedIn'].map((platform) => (
-												<Button
-													key={platform}
-													type="button"
-													className={`p-6 rounded-lg h-14 w-[150px] ${selectedPlatform === platform ? 'bg-[#1c1c1c] text-white' : 'bg-white text-black'} flex  justify-center items-center font-semibold`}
-													onClick={() => handlePlatformSelect(platform)}
-												>
-													{platform === 'Twitter' && <IconBrandXFilled size={20} />}
-													{platform === 'Instagram' && <IconBrandInstagram />}
-													{platform === 'Meta' && <IconBrandMeta size={25} stroke={2} />}
-													{platform === 'LinkedIn' && <IconBrandLinkedin />}
-													<span className='ml-2'>{platform}</span>
-												</Button>
-											))}
-										</div>
-
-										<div className='mt-3'>
-											<Input required {...register('contentType', { required: true })} placeholder="Content Type" className="p-3 w-[590px]" />
-											{/* {errors.contentType && <span className="text-red-500">Content Type is required</span>} */}
-										</div>
-
-										<div className='mt-3 flex gap-3 w-[590px] justify-between'>
-											<Input required {...register('targetAudience', { required: true })} placeholder="Your Target Audience (example: influencers, millennials)" className="p-3 w-[250px]" />
-
-											<Input required {...register('countryRegion', { required: true })} placeholder="Worldwide/Your-Country/Region" className="p-3 w-[290px]" />
-										</div>
-
-										<div className='pt-3'>
-											<Input required {...register('objective', { required: true })} placeholder="Objective" className="p-2 h-28 w-[590px]  col-span-2" />
-										</div>
-
-										<div className='pt-3 '>
-											<button type="submit" className="col-span-2 p-2 w-[100px] hover:bg-black hover:text-white font-semibold bg-white text-black rounded" disabled={isSubmitting}>
-												{isSubmitting ? 'Submitting...' : 'I am done!'}
-											</button>
-										</div>
-
-									</div>
-								</form>
+								
 							</div>
-							<div className='w-[40%] h-full border-yellow-800'>
+							<div className='w-[40%] h-full border-2 border-yellow-800'>
 							</div>
 						</div>
 					</div>
@@ -175,7 +126,6 @@ interface IconProps {
 }
 
 // Reusable IconButton Component
-
 const IconButton = ({ icon, title }: IconProps) => {
 	return (
 		<div>
@@ -189,4 +139,4 @@ const IconButton = ({ icon, title }: IconProps) => {
 	);
 };
 
-export default Page;
+export default Interface;

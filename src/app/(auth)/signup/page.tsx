@@ -5,8 +5,7 @@ import { Input } from "../../../components/ui/input";
 import { cn } from "@/lib/utils";
 import {
 	IconBrandGithub,
-	IconBrandGoogle,
-	IconBrandOnlyfans,
+	IconBrandGoogleFilled,
 } from "@tabler/icons-react";
 import axios, {AxiosError} from "axios";
 import { useToast } from "@/components/ui/use-toast";
@@ -18,57 +17,110 @@ import { Loader2 } from 'lucide-react';
 export default function SignupForm() {
 
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+	const [isSignInclicked, setIsSignInclicked] = useState<boolean>(false);
 
 	const { toast } = useToast()
 	const router = useRouter();
 
+	const handleSignInInterface = () => {
+		if (isSignInclicked) {
+			setIsSignInclicked(false)
+		} else {
+			setIsSignInclicked(true)
+		}
+	}
 
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		setIsSubmitting(true)
+		setIsSubmitting(true);
 
 		try {
+			const email = e.currentTarget.email.value;
+			const password = e.currentTarget.password.value;
+			const firstname = e.currentTarget.firstname?.value;
+			const lastname = e.currentTarget.lastname?.value;
 
-			const response = await axios.post("/api/signup", {
-				email: e.currentTarget.email.value,
-				password: e.currentTarget.password.value,
-			})
+			if (!isSignInclicked) {
 
-			console.log(response.data)
+				// This block will execute when isSignInclicked is false (sign up logic)
 
-			toast({
-				title: "Success",
-				description: response.data.message,
-			})
+				const fullname = `${firstname} ${lastname}`;
 
-			router.replace(`/verify/`)
-			setIsSubmitting(false);
+				const response = await axios.post("/api/signup", {
+					email,
+					password,
+					fullName: fullname
+				});
+
+				console.log(response.data);
+
+				toast({
+					title: "Success",
+					description: response.data.message,
+				});
+
+				router.replace(`/verify/${email}`);
+			} else {
+				// This block will execute when isSignInclicked is true (sign in logic)
+				const response = await axios.post("/api/signin", {
+					email,
+					password
+				});
+
+				console.log(response.data);
+
+				toast({
+					title: "Success",
+					description: response.data.message,
+				});
+
+				router.replace(`/dashboard/`);   // Need to change this route
+			}
 
 		} catch (error) {
-
-			const axiosError = error as AxiosError<apiResponse>
-
-			const errorMessage = axiosError.response?.data.message ?? ('There was a problem with sign up. Please try again.')
+			const axiosError = error as AxiosError<apiResponse>;
+			const errorMessage = axiosError.response?.data.message ?? 'There was a while sign up. Please try again.';
 
 			toast({
-				title: "error",
+				title: "Error",
 				description: errorMessage
-			})
-
+			});
+		} finally {
 			setIsSubmitting(false);
-
 		}
 	};
+
 	return (
 		<div className="w-full h-screen bg-black shadow-input flex justify-center items-center">
 			<div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 bg-black dark:bg-black  md:shadow-2xl md:shadow-slate-800	">
-			<h2 className="font-bold text-xl text-neutral-200">
-				Let's gets you <span className="animate-pulse">STARTED</span>
-			</h2>
+				<h2 className="font-bold text-xl text-neutral-200">
+					{isSignInclicked
+						? "Welcome Back ! "
+						: "Let's get you "}
+					<span className={isSignInclicked ? "" : "animate-pulse"}>
+						{isSignInclicked ? "" : "STARTED"}
+					</span>
+				</h2>
 
-			<form className="my-8" onSubmit={handleSubmit}>
+				<form className="my-8" onSubmit={handleSubmit}>
+
+					{isSignInclicked ? null :(
+
+				<div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+						<LabelInputContainer>
+							<Label htmlFor="firstname">First name</Label>
+							<Input id="firstname" placeholder="Tyler" type="text" />
+						</LabelInputContainer>
+						<LabelInputContainer>
+							<Label htmlFor="lastname">Last name</Label>
+							<Input id="lastname" placeholder="Durden" type="text" />
+						</LabelInputContainer>
+				</div>
+				)}
+
+
 				<LabelInputContainer className="mb-4">
 					<Label htmlFor="email">Email Address</Label>
 					<Input required id="email" placeholder="helloSWATI@gmail.com" type="email" />
@@ -86,8 +138,12 @@ export default function SignupForm() {
 							{isSubmitting ? (
 								<Loader2 className="w-4 h-4 mr-2 animate-spin" />
 							) : (
-								<>
-									<span>Sign up</span>
+									<>
+										{isSignInclicked ? (
+											<span>Sign in</span>
+										) : (
+												<span>Sign up</span>
+										) }
 									<span className="ml-2">&rarr;</span>
 								</>
 							)}
@@ -96,10 +152,20 @@ export default function SignupForm() {
 					</button>
 
 
-					<div className="flex gap-2 items-center justify-center   my-6">
-						<p className="text-neutral-300">Already have an account?</p>
-						<p className="text-neutral-300 cursor-pointer hover:underline hover:underline-offset-2">Sign In</p>
-					</div>
+
+						{isSignInclicked ? (
+							<div className="flex gap-2 items-center justify-center my-6">
+							<p className="text-neutral-300">Create an Account</p>
+							<p onClick={handleSignInInterface} className="text-neutral-300 cursor-pointer hover:underline hover:underline-offset-2">Sign Up</p>
+						</div>
+					) : (
+							<div className="flex gap-2 items-center justify-center my-6">
+								<p className="text-neutral-300">Already have an account?</p>
+								<p onClick={handleSignInInterface} className="text-neutral-300 cursor-pointer hover:underline hover:underline-offset-2">Sign In</p>
+							</div>
+
+						)
+						}
 
 				<div className="bg-gradient-to-r from-transparent via-neutral-700 to-transparent mb-6 h-[1px] w-full" />
 
@@ -118,22 +184,13 @@ export default function SignupForm() {
 						className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-white rounded-md h-10 font-medium  bg-zinc-900 "
 						type="submit"
 					>
-						<IconBrandGoogle className="h-4 w-4 text-neutral-300" />
+						<IconBrandGoogleFilled  className="h-4 w-4 text-neutral-300" />
 						<span className="text-neutral-300 text-sm">
 							Google
 						</span>
 						<BottomGradient />
 					</button>
-					<button
-						className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium  bg-zinc-900 "
-						type="submit"
-					>
-						<IconBrandOnlyfans className="h-4 w-4 text-neutral-300" />
-						<span className="text-neutral-300 text-sm">
-							OnlyFans
-						</span>
-						<BottomGradient />
-					</button>
+
 				</div>
 			</form>
 			</div>
