@@ -10,10 +10,40 @@ export async function POST(req: NextRequest) {
 
 	try {
 
+		// take the user to extract user id and tell number of limited brands allowed
+
+		const refreshToken = req.cookies.get('refreshToken')?.value;
+
+		if (!refreshToken || refreshToken === '') {
+			return NextResponse.json({
+				success: false,
+				message: "Please login/signup first",
+			}, { status: 400 });
+		}
+
+		const user = await takingUserFromRefreshToken(refreshToken);
+
+		if (!user) {
+			return NextResponse.json({
+				success: false,
+				message: "Please login/signup first",
+			}, { status: 400 });
+		}
+
+		const checkingLimitedCreationBrand = await BrandSetupModel.find({ userId: user._id });
+
+
+		if (checkingLimitedCreationBrand.length >= 4) {
+			return NextResponse.json({
+				success: false,
+				message: "More than 5 brands are not allowed",
+			}, { status: 400 });
+		}
+
+
+		//
 
 		const { brandLink } = await req.json();
-
-		console.log(brandLink)
 
 		if (!brandLink) {
 			return NextResponse.json({
@@ -27,7 +57,6 @@ export async function POST(req: NextRequest) {
 			? brandLink
 			: `https://${brandLink}`;
 
-		console.log(formattedBrandLink)
 
 		// Fetch the HTML content of the brand link
 		const { data } = await axios.get(formattedBrandLink);
@@ -36,16 +65,11 @@ export async function POST(req: NextRequest) {
 		const $ = cheerio.load(data);
 
 		// Extract information using appropriate selectors
-		const brandName = $('meta[property="og:site_name"]').attr('content') || $('title').text() || "Default Brand Name";
-		const brandLogo = $('link[rel="icon"]').attr('href') || "default-logo.png";
-		const industry = $('meta[name="industry"]').attr('content') || "Unknown";
-		const brandDescription = $('meta[name="description"]').attr('content') || "No description available.";
+		const brandName = $('meta[property="og:site_name"]').attr('content')?? $('title').text() ?? "Default Brand Name";
+		const brandLogo = $('link[rel="icon"]').attr('href') ?? "default-logo.png";
+		const industry = $('meta[name="industry"]').attr('content') ?? "Unknown";
+		const brandDescription = $('meta[name="description"]').attr('content') ?? "No description available.";
 
-		// take the user to extract user id
-
-		const refreshToken = req.cookies.get('refreshToken')?.value;
-
-		const user = await takingUserFromRefreshToken(refreshToken)
 
 		console.log(user)
 

@@ -47,7 +47,7 @@ const VerifyAccount = () => {
 				variant: 'default',
 			})
 
-			router.replace('/brandcreation') 
+			router.replace('/brandcreate')
 
 
 		} catch (error) {

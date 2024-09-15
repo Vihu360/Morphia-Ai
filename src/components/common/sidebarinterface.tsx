@@ -11,7 +11,7 @@ import { IconHomeFilled, IconCircuitBattery, IconTimeline, IconGhost2Filled, Ico
 				<IconButton icon={<IconHomeFilled size={20} />} title="Home" />
 				<IconButton icon={<IconCircuitBattery stroke={2} />} title="Brands" />
 				<IconButton icon={<IconTimeline size={20} />} title="Projects" />
-				<IconButton icon={<IconGhost2Filled size={20} />} title="Inspirations" />
+				<IconButton icon={<IconGhost2Filled size={20} />} title="Creativity" />
 				<IconButton icon={<IconSettingsFilled size={20} />} title="Settings" />
 			</div>
 </div>

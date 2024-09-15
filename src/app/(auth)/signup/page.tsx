@@ -10,7 +10,6 @@ import {
 import axios, {AxiosError} from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from 'next/navigation';
-import * as z from 'zod';
 import { apiResponse } from "@/types/ApiResponse";
 import { Loader2 } from 'lucide-react';
 
@@ -76,7 +75,7 @@ export default function SignupForm() {
 					description: response.data.message,
 				});
 
-				router.replace(`/dashboard/`);   // Need to change this route
+				router.replace(`/brandcreate/`);
 			}
 
 		} catch (error) {
@@ -156,12 +155,12 @@ export default function SignupForm() {
 						{isSignInclicked ? (
 							<div className="flex gap-2 items-center justify-center my-6">
 							<p className="text-neutral-300">Create an Account</p>
-							<p onClick={handleSignInInterface} className="text-neutral-300 cursor-pointer hover:underline hover:underline-offset-2">Sign Up</p>
+							<button onClick={handleSignInInterface} className="text-neutral-300 cursor-pointer hover:underline hover:underline-offset-2">Sign Up</button>
 						</div>
 					) : (
 							<div className="flex gap-2 items-center justify-center my-6">
 								<p className="text-neutral-300">Already have an account?</p>
-								<p onClick={handleSignInInterface} className="text-neutral-300 cursor-pointer hover:underline hover:underline-offset-2">Sign In</p>
+								<button onClick={handleSignInInterface} className="text-neutral-300 cursor-pointer hover:underline hover:underline-offset-2">Sign In</button>
 							</div>
 
 						)
