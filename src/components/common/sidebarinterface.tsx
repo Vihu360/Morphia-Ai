@@ -1,5 +1,6 @@
 import React from 'react'
 import { IconHomeFilled, IconCircuitBattery, IconTimeline, IconGhost2Filled, IconSettingsFilled } from '@tabler/icons-react';
+import Link from 'next/link';
 
  const SidebarInterface = () => {
 	return (
@@ -8,11 +9,11 @@ import { IconHomeFilled, IconCircuitBattery, IconTimeline, IconGhost2Filled, Ico
 				LOGO
 			</div>
 			<div className='flex flex-col gap-5 '>
-				<IconButton icon={<IconHomeFilled size={20} />} title="Home" />
-				<IconButton icon={<IconCircuitBattery stroke={2} />} title="Brands" />
-				<IconButton icon={<IconTimeline size={20} />} title="Projects" />
-				<IconButton icon={<IconGhost2Filled size={20} />} title="Creativity" />
-				<IconButton icon={<IconSettingsFilled size={20} />} title="Settings" />
+				<IconButton icon={<IconHomeFilled size={20} />} title="Home" link="/" />
+				<IconButton icon={<IconCircuitBattery stroke={2} />} title="Brands" link="brandcreate" />
+				<IconButton icon={<IconTimeline size={20} />} title="Projects" link="projects"  />
+				<IconButton icon={<IconGhost2Filled size={20} />} title="Creativity" link="creativity" />
+				<IconButton icon={<IconSettingsFilled size={20} />} title="Settings" link="settings" />
 			</div>
 </div>
 
@@ -22,19 +23,22 @@ import { IconHomeFilled, IconCircuitBattery, IconTimeline, IconGhost2Filled, Ico
 interface IconProps {
 	icon: any;
 	title: string;
+	link: string
 }
 
 // Reusable IconButton Component
 
-const IconButton = ({ icon, title }: IconProps) => {
+const IconButton = ({ icon, title, link }: IconProps) => {
 	return (
 		<div>
+			<Link href={`/${link}`}>
 			<button className='w-full flex gap-2 justify-start items-center hover:border-r rounded mb-2 '>
 				<div className='bg-white p-2 rounded-xl'>
 					{icon}
 				</div>
 				<p className='ml-2 font-semibold text-xl text-white'>{title}</p>
 			</button>
+			</Link>
 		</div>
 	);
 };

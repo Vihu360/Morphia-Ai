@@ -8,16 +8,15 @@ interface GeminiApiSocialMediaPostGenerationParams {
 	contentType: string;
 	objective: string;
 	brandName: string;
+	brandDescription: string;
 }
 export async function GeminiApiSocialMediaPostGeneration(params: GeminiApiSocialMediaPostGenerationParams) {
 
 	console.log("generative ai prompt hitting")
 
-	console.log(params.brandName);
-	console.log(params.contentType, params.objective, params.platform);
 
 	const prompt =
-		`Create a list of five social media posts for ${params.platform}, formatted as a single string. Each post should be separated by '||'. These posts are for a brand social media campaign with the objective of ${params.objective} and should cater to a diverse audience on ${params.platform}. Focus on universal themes that encourage ${params.contentType}, and engaging interaction, while aligning with the brand's identity, ${params.brandName}. Avoid repetitive topics or formats. Use a mix of famous quotes, wordplay, and creative comparisons that are relatable to the audience. For example, your output should look like this: 'Our components are like biryani: perfectly layered and packed with flavor.||Travel back in time to a simpler era of coding. TypeScript, powered by Accernity UI, will make it happen.||Who says beautiful design can't be fast? Our components are so sleek, they could give Usain Bolt a run for his money. 🏃💨 ||They say don’t judge a book by its cover, but we’re definitely judging UIs by their design. 📚✨ With Accernity UI, you’ll have a bestseller! What’s the ‘cover’ of your latest project?' || Create diverse posts that reflect the brand's identity, ${params.brandName}, and resonate with the platform's audience, ensuring each post is unique and engaging.`
+		`Generate a list of five unique and engaging social media posts for ${ params.platform }, formatted as a single string with each post separated by '||'.These posts are part of a brand social media campaign for ${ params.brandName } with the following details: Campaign Objective: ${ params.objective }, Content Type: ${ params.contentType }, Brand Description: ${ params.brandDescription }.Guidelines: 1. Cater to a diverse audience on ${ params.platform }; 2. Focus on universal themes that encourage ${ params.contentType } and user interaction; 3. Align with ${ params.brandName } s identity and values as described in the brand description; 4. Use a mix of: famous quotes, wordplay, creative comparisons, relatable scenarios, and industry-specific humor (if applicable); 5. Incorporate calls-to-action that prompt audience engagement; 6. Ensure each post is distinct in topic and format; 7. Adapt the tone and style to suit ${params.platform}'s typical content.Consider the brand's unique selling points, target audience preferences, and current trends on ${params.platform} when crafting the posts. Aim for a balance of informative, entertaining, and inspiring content that reflects the brand's personality and resonates with the audience.Example output format: 'Witty post relating ${params.brandName} to a popular culture reference #Hashtag || Inspirational quote connected to ${params.brandName}'s values #BrandedHashtag || Creative comparison between ${ params.brandName } 's product/service and an everyday object || Question that encourages audience interaction related to ${params.contentType} || Call-to-action post highlighting a key feature or benefit of ${params.brandName}`
 
 
 	const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
@@ -34,8 +33,6 @@ export async function GeminiApiSocialMediaPostGeneration(params: GeminiApiSocial
 		const response = result.response;
 
 		const text = response.text();
-
-		console.log(text);
 
 		return text;
 	} catch (error) {

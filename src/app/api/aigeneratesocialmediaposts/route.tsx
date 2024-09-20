@@ -12,9 +12,9 @@ export async function POST(request: NextRequest) {
 		const refreshToken = request.cookies.get("refreshToken")?.value;
 		const user = await takingUserFromRefreshToken(refreshToken);
 
-		const { brandName, platform, contentType, objective } = await request.json();
+		const { brandData, platform, contentType, objective } = await request.json();
 
-		console.log(" fetched data from ui ",brandName, platform, contentType, objective);
+		const brandName = brandData.brandName;
 
 		if (!user) {
 			return NextResponse.json({ success: false, message: "User not found" }, { status: 400 });
@@ -35,19 +35,21 @@ export async function POST(request: NextRequest) {
 
 		// Validate the platform and content type input
 		const validPlatforms = ["Facebook", "Instagram", "LinkedIn", "Twitter"];
-		const validContentTypes = ["AdCampaign", "Social Media Post", "Story"];
 
-		if (!validPlatforms.includes(platform) || !validContentTypes.includes(contentType)) {
+		if (!validPlatforms.includes(platform)) {
 			return NextResponse.json({ success: false, message: "Invalid platform or content type" }, { status: 400 });
 		}
 
 		// Send data to Gemini AI API for content generation
+
+		console.log("fine")
 
 		const generatedContentResponse = await GeminiApiSocialMediaPostGeneration({
 			platform,
 			contentType,
 			objective,
 			brandName: brand.brandName,
+			brandDescription: brand.brandDescription,
 		});
 
 		if (!generatedContentResponse) {
@@ -58,18 +60,17 @@ export async function POST(request: NextRequest) {
 			const generatedContent = generatedContentResponse;
 			const postsArray = generatedContent.split('||').map(post => post.trim());
 
-			console.log("Generated content:", generatedContent);
 			console.log("post:", postsArray)
 
 			// save the ai content to the database
 
-			const pushToaiGeneratedBackup = await new aiGeneratedContentBackup({
-				userId: user._id,
-				brandName: brand.brandName,
-				aiGeneratedContent: postsArray,
-			})
+			// const pushToaiGeneratedBackup = await new aiGeneratedContentBackup({
+			// 	userId: user._id,
+			// 	brandName: brand.brandName,
+			// 	aiGeneratedContent: postsArray,
+			// })
 
-			await pushToaiGeneratedBackup.save();
+			// await pushToaiGeneratedBackup.save();
 
 
 			// Return the generated content back to the user
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest) {
 
 		} else
 		{
-			return NextResponse.json({ success: false, message: "Invalid response from Gemini API" }, { status: 500 });
+			return NextResponse.json({ success: false, message: "Invalid response from AI" }, { status: 500 });
 		}
 
 	} catch (error) {

@@ -122,7 +122,7 @@ export default function SignupForm() {
 
 				<LabelInputContainer className="mb-4">
 					<Label htmlFor="email">Email Address</Label>
-					<Input required id="email" placeholder="helloSWATI@gmail.com" type="email" />
+					<Input required id="email" placeholder="hello@gmail.com" type="email" />
 				</LabelInputContainer>
 				<LabelInputContainer className="mb-4">
 					<Label htmlFor="password">Password</Label>

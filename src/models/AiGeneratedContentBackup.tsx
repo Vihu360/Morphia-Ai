@@ -6,7 +6,7 @@ import mongoose, {Schema, Document} from "mongoose";
 export interface aiGeneratedContentBackup extends Document {
 	userId: string
 	brandName: string
-	aiGeneratedContent: string
+	aiGeneratedContent: [string]
 	createdAt: Date
 	updatedAt: Date
 	expiresAt: Date
@@ -24,7 +24,7 @@ const aiGeneratedContentBackupSchema: Schema<aiGeneratedContentBackup> = new Sch
 		type: String,
 	},
 	aiGeneratedContent: {
-		type: String,
+		type: [String],
 		required: [true, "AI generated content is required"]
 	},
 	createdAt: {
