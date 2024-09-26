@@ -1,32 +1,19 @@
 // Import required packages and types
 import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 
 // Function to add color variables
-function addVariablesForColors({ addBase }: any) {
-  // Define your colors directly
-  const newVars = {
-    "--border": colors.gray[200],
-    "--input": colors.gray[100],
-    "--ring": colors.blue[500],
-    "--background": colors.white,
-    "--foreground": colors.black,
-    "--primary": colors.blue[600],
-    "--primary-foreground": colors.white,
-    "--secondary": colors.green[600],
-    "--secondary-foreground": colors.white,
-    "--destructive": colors.red[600],
-    "--destructive-foreground": colors.white,
-    "--muted": colors.gray[500],
-    "--muted-foreground": colors.white,
-    "--accent": colors.yellow[600],
-    "--accent-foreground": colors.black,
-    "--popover": colors.white,
-    "--popover-foreground": colors.black,
-    "--card": colors.white,
-    "--card-foreground": colors.black,
-  };
+function addVariablesForColors({ addBase, theme }: any) {
+  // Flatten the color palette to access all Tailwind color variants
+  const allColors = flattenColorPalette(theme("colors"));
 
+  // Convert color keys into CSS variables
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  // Add the color variables to the :root element
   addBase({
     ":root": newVars,
   });

@@ -126,6 +126,14 @@ const Page: React.FC = () => {
 
 	console.log("ai Response Data", aiResponseData)
 
+	const handleCopyText = (post: string) => {
+		navigator.clipboard.writeText(post);
+		toast({
+			title: 'Success',
+			description: 'Text copied to clipboard',
+		})
+	};
+
 
 
 	return (
@@ -153,13 +161,26 @@ const Page: React.FC = () => {
 						{/* Right side other part element */}
 
 						{aiResponseData.length > 0 ? (
-							<div className='text-white w-full h-[100%] grid grid-cols-3 gap-4'>
+							<div className='text-white w-full h-[100%] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 sm:p-8 md:p-14'>
 								{aiResponseData.map((post: any) => (
-									<div key={post.id} className='flex flex-col justify-center items-center text-black bg-white min-h-[150px] p-4'>
+									<div
+										key={post.id}
+										className='relative flex justify-center items-center text-white shadow-2xl shadow-slate-800 bg-[#0d0d0d] rounded-xl min-h-[150px] p-4 hover:bg-[#1f1f1f] group'
+									>
 										{post} {/* Assuming post.content holds the text you want to display */}
+
+										{/* Copy text overlay on hover */}
+										<div
+											className='absolute inset-0 sm:flex justify-center items-center bg-gray-800 rounded-xl bg-opacity-70 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer hidden '
+											onClick={() => handleCopyText(post)}
+										>
+											Copy
+										</div>
 									</div>
 								))}
 							</div>
+
+
 						) :
 							(
 
