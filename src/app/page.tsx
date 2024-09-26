@@ -6,13 +6,9 @@ import { BackgroundLinesDemo } from '@/components/bacground-lines';
 
 const Page = () => {
 	return (
-		<div className=''>
+		<div className='min-w-screen min-h-screen bg-black flex items-center flex-col justify-center'>
 			<NavbarDemo />
 			<BackgroundLinesDemo/>
-
-			<div className="
-
-      ">Hello this is a page</div>
 		</div>
 	);
 };
