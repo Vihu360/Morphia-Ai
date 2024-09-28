@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
 			return NextResponse.json({ success: false, message: "Please login/signup first" }, { status: 400 });
 		}
 
+		return NextResponse.json({ success: true, message: "success" }, { status: 200 });
 
 
 	} catch (error) {

@@ -190,9 +190,9 @@ const Page: React.FC = () => {
 
 						) :
 							(
-								<div className='text-white  w-full h-full flex flex-col items-center justify-start'>
+								<div className='text-white  w-full h-full flex flex-col items-center justify-start border '>
 
-									<div className=' flex justify-between h-[12%] gap-6 md:w-full md:px-10 items-center  '>
+									<div className=' flex justify-between md:h-[12%] gap-6 w-full px-10 items-center '>
 										<div className='flex gap-3 items-center justify-center pt-3'>
 											<IconBrandPatreonFilled size={30} color='white' className='sm:block hidden' />
 											<p className='text-white font-semibold text-left text-lg'>Generate perfect hooks </p>
@@ -214,7 +214,7 @@ const Page: React.FC = () => {
 										</button>
 									</div>
 
-									<div className='flex justify-center items-center w-full h-[88%]'>
+									<div className='flex justify-center items-center w-full h-full md:h-[88%]  '>
 										<div className=' w-2/3 sm:w-1/2 grid items-center justify-center py-3'>
 											<div className=' grid gap-3 py-2 pt-2 sm:pt-2 '>
 												<div>
