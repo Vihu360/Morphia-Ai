@@ -252,7 +252,7 @@ const Page: React.FC = () => {
 				<div className='lg:col-span-8 h-full'>
 					{/* Right side first top element */}
 					<div className='font-semibold rounded-tl-3xl h-[15%] flex justify-between rounded-t items-center px-8'>
-						<p className='text-neutral-200 text-left text-lg'>Let's Put Your Brand on the Map (Literally)</p>
+						<p className='text-neutral-200 text-left text-lg'>Your Brands</p>
 						<Button className="glow hover:bg-black hover:text-white flex justify-center rounded-3xl">
 							Upgrade
 						</Button>

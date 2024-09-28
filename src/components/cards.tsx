@@ -53,7 +53,7 @@ export const projects: Project[] = [
 		link: "/aiAds",
 	},
 	{
-		title: "Netflix",
+		title: "Social Media Trend Analyzer",
 		description: "A streaming service that offers a wide variety of award-winning TV shows.",
 		link: "https://netflix.com",
 	},

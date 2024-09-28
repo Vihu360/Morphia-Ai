@@ -12,7 +12,7 @@ import CustomButtom from '@/components/common/buttons';
 
 
 const Page: React.FC = () => {
-	const [selectBrand, setSelectBrand] = useState<{ brandName: string; id: string; description: string }>({ brandName: '', id: '', description: '' });	const [selectSocialMediaPlatform, setSelectSocialMediaPlatform] = useState('');
+	const [selectBrand, setSelectBrand] = useState<{ brandName: string; id: string; description: string }>({ brandName: '', id: '', description: '' }); const [selectSocialMediaPlatform, setSelectSocialMediaPlatform] = useState('');
 	const [selectedCard, setSelectedCard] = useState<string | null>(null); // State to track selected card
 	const [brands, setBrands] = useState<{ brandName: string; id: string; description: string }[]>([]);
 	const [contentType, setContentType] = useState('');
@@ -81,7 +81,7 @@ const Page: React.FC = () => {
 				});
 			}
 
-			if(contentType === ""){
+			if (contentType === "") {
 				return toast({
 					title: 'content Type is required',
 					description: 'Please select a content type and try again',
@@ -89,7 +89,7 @@ const Page: React.FC = () => {
 				});
 			}
 
-			if(objective === ""){
+			if (objective === "") {
 				return toast({
 					title: 'Objective is required',
 					description: 'Please select a Objective and try again',
@@ -124,8 +124,6 @@ const Page: React.FC = () => {
 		}
 	};
 
-	console.log("ai Response Data", aiResponseData)
-
 	const handleCopyText = (post: string) => {
 		navigator.clipboard.writeText(post);
 		toast({
@@ -134,14 +132,23 @@ const Page: React.FC = () => {
 		})
 	};
 
+	const displayOnlyTwotexts = (brandName: string) => {
+		const words = brandName.split(' ');
+
+		if (words.length > 2) {
+			return words.slice(0, 2).join(' ') + '...';
+		}
+		return brandName;
+	}
+
 
 
 	return (
 		<div>
-			<div className='flex min-w-screen min-h-screen justify-center bg-black items-center'>
-				<div className='bg-black border-t-2 w-full h-full sm:w-[80%] sm:h-[80%] md:rounded-3xl grid shadow-2xl shadow-slate-800 lg:grid-cols-10'>
+			<div className='flex min-w-screen min-h-screen justify-center bg-black md:items-center'>
+				<div className='bg-black md:border-t-2 w-full h-full sm:w-[80%] sm:h-[80%] md:rounded-3xl grid md:shadow-2xl md:shadow-slate-800 lg:grid-cols-10'>
 					{/* Left side navbar */}
-					<div className='bg-black-400 h-full lg:col-span-2 hidden lg:block items-center border-r justify-center'>
+					<div className='bg-black-400 h-full lg:col-span-2 hidden lg:block items-center border-r justify-center '>
 						<SidebarInterface />
 					</div>
 
@@ -183,25 +190,22 @@ const Page: React.FC = () => {
 
 						) :
 							(
+								<div className='text-white  w-full h-full flex flex-col items-center justify-start'>
 
-
-								<div className='text-white w-full h-[100%]'>
-
-									<div className=' flex justify-between h-[12%] pl-6 pr-6 items-center p-4  '>
+									<div className=' flex justify-between h-[12%] gap-6 md:w-full md:px-10 items-center  '>
 										<div className='flex gap-3 items-center justify-center pt-3'>
 											<IconBrandPatreonFilled size={30} color='white' className='sm:block hidden' />
-											<p className='text-white font-semibold text-left text-lg'>Generate Ai Hooks for your Social Media Game</p>
+											<p className='text-white font-semibold text-left text-lg'>Generate perfect hooks </p>
 										</div>
 										<button className='rounded-2xl bg-neutral-200 p-[8px] flex justify-center gap-1 items-center'>
 											<div>
-
 												<select
 													className="text-black bg-neutral-200 cursor-pointer decoration-none"
 													onChange={(e) => setSelectBrand(JSON.parse(e.target.value))}
 												>
 													{brands.map((brand) => (
 														<option key={brand.id} value={JSON.stringify(brand)}>
-															{brand.brandName}
+															{displayOnlyTwotexts(brand.brandName)}
 														</option>
 													))}
 												</select>
@@ -224,19 +228,22 @@ const Page: React.FC = () => {
 												</div>
 											</div>
 											<div className=' grid gap-1 pb-2'>
-											<p className=''>Content Type :</p>
-											<Input onChange={(e) => setContentType(e.target.value)} placeholder="Humrous/Realistic/Creative" className="w-full border " />
+												<p className=''>Content Type :</p>
+												<Input onChange={(e) => setContentType(e.target.value)} placeholder="Humrous/Realistic/Creative" className="w-full border text-xs " />
 											</div>
 											<div className=' grid gap-1 pb-1'>
-											<p className=''>Enter the objective :</p>
-											<Input onChange={(e) => setObjective(e.target.value)} placeholder="Generating Engagements/Reactions/More Reach" className="w-full border " />
+												<p className=''>Enter the objective :</p>
+												<Input onChange={(e) => setObjective(e.target.value)} placeholder="Generating Engagements/Reactions/More Reach" className="w-full border text-xs" />
 											</div>
 											<div className=' grid gap-1'>
-											<p className=''>Any other details you want to provide us :</p>
-												<Input onChange={(e) => setAnyotherDescription(e.target.value)} placeholder="Use a mix of famous quotes, wordplay, and creative comparisons" className="w-full border " />
+												<p className=''>Any other details you want to provide us :</p>
+												<Input onChange={(e) => setAnyotherDescription(e.target.value)} placeholder="Use a mix of famous quotes, wordplay, and creative comparisons" className="w-full border text-xs " />
 											</div>
 
-											<CustomButtom text="Generate Ai Hooks" isLoading={isSubmitting} onClick={handleGenerateAiHooks} />
+											<div className='w-full mb-4 flex items-center justify-center'>
+											<CustomButtom className='w-full' text="Generate Ai Hooks" isLoading={isSubmitting} onClick={handleGenerateAiHooks} />
+											</div>
+
 										</div>
 									</div>
 								</div>

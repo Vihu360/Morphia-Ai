@@ -6,15 +6,16 @@ interface CustomButtonProps {
 	Icon?: React.ComponentType<any>;
 	onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	isLoading?: boolean;
+	className?: string;
 }
 
-const CustomButtom: React.FC<CustomButtonProps> = ({ text, Icon, onClick, isLoading }) => {
+const CustomButtom: React.FC<CustomButtonProps> = ({ text, Icon, onClick, isLoading,className }) => {
 
 
 	return (
 
 
-			<button className="py-4" onClick={onClick}>
+			<button className={`py-4 ${className}`} onClick={onClick}>
 			<div className="p-3 py-2 flex justify-center text-white items-center bg-gradient-to-br relative group/btn from-zinc-900 to-zinc-900 bg-zinc-800 w-full rounded-md h-10 border border-zinc-800 shadow-[0px_-1px_0px_0px_var(--zinc-800)_inset] ">
 				{isLoading ? (
 					<Loader2 className="animate-spin" size={20} color="white" />
