@@ -2,9 +2,10 @@ import { HoverEffect } from "../components/ui/card-hover-effect";
 import { useRouter } from "next/navigation";
 
 interface Project {
+	id: number,
 	title: string;
 	description: string;
-	link: string; // Can be either a route or an external link
+	link: string;
 }
 
 export function CardHoverEffect() {
@@ -26,7 +27,7 @@ export function CardHoverEffect() {
 
 	const modifiedProjects: Project[] = projects.map((project) => ({
 		...project,
-		handleClick: () => handleCardClick(project.link),
+		handleClick: () => handleCardClick(project.link), key: project.id,
 	}));
 
 	return (
@@ -38,34 +39,40 @@ export function CardHoverEffect() {
 
 export const projects: Project[] = [
 	{
+		id: 1,
 		title: "Level up you Social Game",
 		description: "Create social media posts for your handles with our advanced AI feature to gain more engagements, impressions, and be more popular.",
 		link: "aicontentcreate",
 	},
 	{
+		id: 2,
 		title: "Analyse your competitors",
 		description: "Before any big game, a good sports team spends time studying their opponent. Our analysis is like a scouting report for your business—a tool for designing a game plan that helps your company succeed.",
 		link: "/projects",
 	},
 	{
+		id: 3,
 		title: "Create ADs",
 		description: "Why to miss chance to create Ai based Ads that let you reach bigger auidence.",
-		link: "/aiAds",
+		link: "/test",
 	},
 	{
+		id: 4,
 		title: "Social Media Trend Analyzer",
 		description: "A streaming service that offers a wide variety of award-winning TV shows.",
-		link: "https://netflix.com",
+		link: "/socialmediatrendanalyser",
 	},
 	{
-		title: "Netflix",
+		id: 5,
+		title: "Get all DM at one place",
 		description: "A streaming service that offers a wide variety of award-winning TV shows.",
-		link: "https://netflix.com",
+		link: "/allmessages",
 	},
 	{
-		title: "Netflix",
+		id: 6,
+		title: "Create SEO based content",
 		description: "A streaming service that offers a wide variety of award-winning TV shows.",
-		link: "https://netflix.com",
+		link: "/seo",
 	},
 	// ... add other projects as needed
 ];

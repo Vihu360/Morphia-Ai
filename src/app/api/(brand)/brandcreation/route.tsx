@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
 
 		const user = await takingUserFromRefreshToken(refreshToken);
 
+		console.log(refreshToken);
+
 		if (!user) {
 			return NextResponse.json({
 				success: false,
@@ -30,16 +32,31 @@ export async function POST(req: NextRequest) {
 			}, { status: 400 });
 		}
 
+		console.log("user", user)
+
 		const checkingLimitedCreationBrand = await BrandSetupModel.find({ userId: user._id });
 
 
-		if (checkingLimitedCreationBrand.length >= 4) {
+		if (user.premiumType === "free" && checkingLimitedCreationBrand.length >= 1) {
 			return NextResponse.json({
 				success: false,
-				message: "More than 5 brands are not allowed",
+				message: "More than 1 brands are not allowed, please UPGRADE",
 			}, { status: 400 });
 		}
 
+		if (user.premiumType === "standard" && checkingLimitedCreationBrand.length >= 3) {
+			return NextResponse.json({
+				success: false,
+				message: "More than 3 brands are not allowed, please UPGRADE",
+			}, { status: 400 });
+		}
+
+		if ( user.premiumType === "valuable" && checkingLimitedCreationBrand.length >= 6) {
+			return NextResponse.json({
+				success: false,
+				message: "More than 6 brands are not allowed",
+			}, { status: 400 });
+		}
 
 		//
 
@@ -70,9 +87,6 @@ export async function POST(req: NextRequest) {
 		const industry = $('meta[name="industry"]').attr('content') ?? "Unknown";
 		const brandDescription = $('meta[name="description"]').attr('content') ?? "No description available.";
 
-
-		console.log(user)
-
 		// Create a new brand setup document
 		const newBrandCreation = new BrandSetupModel({
 			userId: user._id,
@@ -89,9 +103,6 @@ export async function POST(req: NextRequest) {
 			success: true,
 			message: "Brand created successfully",
 		}, { status: 200 });
-
-
-
 
 
 	} catch (error) {

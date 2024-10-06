@@ -3,7 +3,7 @@ import UserModel from "@/models/Users";
 import { NextResponse } from "next/server";
 
 
-const generateAccessandRefreshToken = async (userId: string) => {
+ export const generateAccessandRefreshToken = async (userId: string) => {
 	try {
 		const user = await UserModel.findById(userId);
 		if (!user) {

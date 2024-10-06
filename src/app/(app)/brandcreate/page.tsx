@@ -125,6 +125,16 @@ const Page: React.FC = () => {
 		// After implementation, don't forget to refresh the brands list
 	};
 
+	const displayOnlyTwotexts = (brandName: string) => {
+
+		const words = brandName.split(' ');
+
+		if (words.length > 3) {
+			return words.slice(0, 3).join(' ') + '...';
+		}
+		return brandName;
+	}
+
 	// Render function for brand list or add brand form
 	const renderBrandContent = (): JSX.Element => {
 		if (isBrandsLoading) {
@@ -136,8 +146,8 @@ const Page: React.FC = () => {
 				<div className='h-[85%] text-white flex flex-col text-center items-center justify-center bg-black'>
 					<div>
 						{brands.map((brand) => (
-							<div key={brand.id} className="bg-gray-800 p-4 md:min-w-[500px] gap-4 md:gap-0 flex items-center justify-between rounded-lg shadow-md mb-4">
-								<h3 className='text-lg font-semibold'>{brand.brandName}</h3>
+							<div key={brand.id} className="bg-gray-800 p-4 md:min-w-[500px] w-[300px]	border gap-4 md:gap-0 flex items-center justify-between rounded-lg shadow-md mb-4">
+								<h3 className='text-lg font-semibold'>{displayOnlyTwotexts(brand.brandName)}</h3>
 								<IconTrash onClick={() => deleteBrand(brand.id)} stroke={2} size={20} color='white' className='cursor-pointer' />
 							</div>
 						))}
@@ -253,12 +263,15 @@ const Page: React.FC = () => {
 					{/* Right side first top element */}
 					<div className='font-semibold rounded-tl-3xl h-[15%] flex justify-between rounded-t items-center px-8'>
 						<p className='text-neutral-200 text-left text-lg'>Your Brands</p>
+						<div className='flex gap-4 items-center justify-between'>
+
 						<Button className="glow hover:bg-black hover:text-white flex justify-center rounded-3xl">
 							Upgrade
 						</Button>
 						<Button className='md:block hidden rounded-2xl'>
 							<IconBell stroke={2} size={20} />
 						</Button>
+						</div>
 					</div>
 
 					{/* Right side other part element */}

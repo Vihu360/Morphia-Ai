@@ -2,6 +2,13 @@ import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
+enum premiumTypes {
+	FREE = 'free',
+	STANDARD = 'standard',
+	VALUABLE = 'valuable'
+}
+
 export interface User extends Document {
 	email: string;
 	password: string;
@@ -12,6 +19,7 @@ export interface User extends Document {
 	isVerified: boolean;
 	verifyCode: string;
 	verifyCodeExpiry: Date;
+	premiumType: premiumTypes;
 	isPasswordCorrect(password: string): Promise<boolean>;
 	generateAccessToken(): string;
 	generateRefreshToken(): string;
@@ -50,6 +58,12 @@ const userSchema: Schema<User> = new Schema(
 			type: Date,
 			required: [true, "Verify code expiry is required"],
 		},
+		premiumType: {
+			type: String,
+			required: [true, "Premium type is required"],
+			enum: [premiumTypes.FREE, premiumTypes.STANDARD, premiumTypes.VALUABLE],
+			default: premiumTypes.FREE
+		}
 	},
 	{
 		timestamps: true

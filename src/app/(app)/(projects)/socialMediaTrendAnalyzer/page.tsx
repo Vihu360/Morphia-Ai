@@ -1,9 +1,13 @@
 import React from 'react'
 
-export const Page = () => {
+const page = () => {
 	return (
-		<div className='min-h-screen min-w-screen bg-black flex justify-center items-center'>
-			this page is coming at rapid speed
+		<div className='w-full h-full flex justify-center items-center'>
+
+			This page is under construction.Please look out for other features
+
 		</div>
 	)
 }
+
+export default page

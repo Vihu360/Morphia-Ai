@@ -106,7 +106,8 @@ const config: Config = {
   },
   plugins: [
     addVariablesForColors, // Add the plugin function for color variables
-    require("tailwindcss-animate"), // Other plugins
+		require("tailwindcss-animate"), // Other plugins
+		require('tailwind-scrollbar-hide')
   ],
 };
 

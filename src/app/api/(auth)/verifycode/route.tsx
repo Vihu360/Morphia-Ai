@@ -1,8 +1,11 @@
 import UserModel from "@/models/Users";
 import dbConnect from "@/lib/dbConnect";
+import { generateAccessandRefreshToken } from "../signin/route";
+import { NextRequest, NextResponse } from "next/server";
 
 
-export async function POST(request: Request) {
+
+export async function POST(request: NextRequest) {
 
 	await dbConnect();
 
@@ -42,10 +45,35 @@ export async function POST(request: Request) {
 				user.isVerified = true;
 				await user.save()
 
-				return Response.json({
-					success: true,
-					message: "Code has been verified"
-				})
+				const { accessToken, refreshToken } = await generateAccessandRefreshToken(user._id);
+
+				interface CookieOptions {
+					expires: Date;
+					httpOnly: boolean;
+					secure: boolean;
+					sameSite: "strict" | "lax" | "none";
+				}
+
+				const option: CookieOptions = {
+					expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+					httpOnly: true,
+					secure: true,
+					sameSite: "strict",
+				};
+
+
+				const response = NextResponse.json(
+					{
+						success: true,
+						message: "Code has been verified Successfully",
+					},
+					{ status: 200 }
+				)
+
+				response.cookies.set("accessToken", accessToken, option);
+				response.cookies.set("refreshToken", refreshToken, option);
+
+				return response;
 			}
 
 			else if (!checkExpiry) {

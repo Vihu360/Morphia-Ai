@@ -1,12 +1,14 @@
 import React from 'react'
 import { IconHomeFilled, IconCircuitBattery, IconTimeline, IconGhost2Filled, IconSettingsFilled } from '@tabler/icons-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
  const SidebarInterface = () => {
 	return (
-<div className='pt-12 flex flex-col justify-center items-center '>
-			<div className=' w-full mb-7 text-white flex justify-center items-center border-black p-3'>
-				LOGO
+<div className='flex h-full flex-col gap-6 justify-center items-center'>
+			<div className=' w-full text-white flex justify-center items-center '>
+				<Image
+				src="/favicon.ico" alt="logo" width={100} height={100}/>
 			</div>
 			<div className='flex flex-col gap-5 '>
 				<IconButton icon={<IconHomeFilled size={20} />} title="Home" link="/" />
