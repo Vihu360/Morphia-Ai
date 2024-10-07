@@ -1,6 +1,6 @@
 import UserModel from "@/models/Users";
 import dbConnect from "@/lib/dbConnect";
-import { generateAccessandRefreshToken } from "../signin/route";
+import generateAccessandRefreshToken from "@/helpers/generateAccessandRefreshToken";
 import { NextRequest, NextResponse } from "next/server";
 
 
