@@ -54,7 +54,7 @@ export const projects: Project[] = [
 		id: 3,
 		title: "Create ADs",
 		description: "Why to miss chance to create Ai based Ads that let you reach bigger auidence.",
-		link: "/test",
+		link: "/createads",
 	},
 	{
 		id: 4,
