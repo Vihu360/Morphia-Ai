@@ -86,7 +86,10 @@ export default function AdCreator(): JSX.Element {
 	const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 	const [selectedAspectRatio, setSelectedAspectRatio] = useState<string>('Instagram Story');
 	const [isEditing, setIsEditing] = useState(false);
-	const [aiGeneratedAdCaption, setaiGeneratedAdCaption] = useState<string>('Your Text Here');
+	const [isCaptionGenerated, setIsCaptionGenerated] = useState(false);
+	const [selectedCaption, setSelectedCaption] = useState("");
+	const [aiGeneratedAdCaption, setAiGeneratedAdCaption] = useState<string[]>([]);
+	const [selectAiGeneratedAdCaption, setaiGeneratedAdCaption] = useState<string>('Your Text Here');
 	const [captionPosition, setCaptionPosition] = useState({ x: 20, y: 240 });
 	const [captionSize, setCaptionSize] = useState(16);
 	const [captionColor, setCaptionColor] = useState('#FFFFFF');
@@ -190,6 +193,12 @@ export default function AdCreator(): JSX.Element {
 		}
 	}, [isEditing, captionWidth]);
 
+	const handleCaptionClick = (caption: string) => {
+		setSelectedCaption(caption);
+		setaiGeneratedAdCaption(caption);
+	};
+
+
 	const handleBackgroundSelect = (id: string) => {
 		setSelectedBackground(id);
 		setUploadedImage(null);
@@ -230,13 +239,23 @@ export default function AdCreator(): JSX.Element {
 	};
 
 
-	const handleGenerateCaption = () => {
+	const handleGenerateCaption = async () => {
 
+		try {
 
-		toast({
-			title: "Generating caption",
-			description: "AI is generating a caption for your ad.",
-		});
+			const response = await axios.post('/api/aigeneratedadscaption', { brandData:selectBrand , adGoal, platform, contentType, language, keywords, targetAudience })
+
+			const adCaptions = response.data
+
+			setAiGeneratedAdCaption(adCaptions.content);
+			setIsCaptionGenerated(true);
+
+		} catch (error) {
+
+			console.log("error", error)
+
+		}
+
 	};
 
 	const handleAspectRatioChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -256,7 +275,7 @@ export default function AdCreator(): JSX.Element {
 				Produce similar backgrounds with your own words or our suggestions.
 			</p>
 
-			<div className='w-full h-[80%] overflow-y-auto scrollbar-hide'>
+			<div className='w-full h-[80%] overflow-y-auto scrollbar-hide '>
 				<div ref={carouselRef} className="grid grid-cols-3 gap-5">
 					{backgroundOptions.map((bg) => (
 						<button
@@ -306,7 +325,7 @@ export default function AdCreator(): JSX.Element {
 
 		<div className="w-full h-full md:w-1/2 overflow-y-auto scrollbar-hide bg-black md:shadow-2xl md:shadow-slate-800 border-neutral-200 border">
 
-			<div className='sm:flex flex-col items-center justify-center p-4'>
+			<div className='sm:flex flex-col items-center justify-center p-4 '>
 
 				<h2 className="text-lg font-semibold mb-2">Perfect texts for your <span className='bg-white text-black p-[1.5px] rounded px-2'>ADS</span></h2>
 			<p className="text-sm mb-4 text-neutral-200">
@@ -314,9 +333,32 @@ export default function AdCreator(): JSX.Element {
 			</p>
 			</div>
 
-			<div className=" w-full h-[89%] sm:h-[84%] border-dotted border-t-4 border-sky-500 p-5 flex flex-col gap-3 sm:justify-center sm:items-center sm:px-12">
+			{isCaptionGenerated ?
+				(
+					<div className='w-full h-[89%] bg-gray-800'>
 
-				<div className='w-full flex items-center justify-center '>
+						<h2 className="text-center text-xl font-semibold text-gray-800 mb-6">Select a Caption:</h2>
+
+						<div className="flex flex-col space-y-4 px-12">
+							{aiGeneratedAdCaption?.map((caption, index) => (
+								<button
+									key={index}
+									className={`cursor-pointer p-4 rounded-lg transition
+            ${selectedCaption === caption ? 'bg-white text-black border-none' : 'bg-black  text-white hover:bg-gray-700 '}`}
+									onClick={() => handleCaptionClick(caption)}
+								>
+									{caption}
+								</button>
+							))}
+							<button className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg flex items-center justify-center">Generate more</button>
+							<button className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg flex items-center justify-center">Download the final picture</button>
+						</div>
+					</div>
+				):
+				(
+			<div className=" w-full h-[89%] sm:h-[84%] border-dotted border-t-4 border-black p-5 flex flex-col gap-3 sm:justify-center sm:items-center sm:px-12">
+
+				<div className='w-full flex items-center justify-center border '>
 					<div className='w-full flex flex-col items-start justify-center gap-1'>
 
 						<label className='' htmlFor='platform-select' >where you want to run your ad ?</label>
@@ -418,6 +460,8 @@ export default function AdCreator(): JSX.Element {
 				</button>
 
 			</div>
+				)}
+
 
 		</div>
 
@@ -546,7 +590,7 @@ export default function AdCreator(): JSX.Element {
 										<div className="resize-handle right-handle absolute right-0 top-0 w-2 h-full cursor-ew-resize bg-blue-500 opacity-50" />
 									</>
 								)}
-								{selectedBackground === null ? ('') : (aiGeneratedAdCaption)}
+								{selectedBackground === null ? ('') : (selectAiGeneratedAdCaption)}
 							</div>
 						</div>
 

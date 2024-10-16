@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ success: false, message: "Please login/signup first" }, { status: 404 });
 		}
 
-		const { brandData, platform, contentType, adGoal, additionalInfo } = await request.json();
+		const { brandData, platform, contentType, adGoal, targetAudience, language, keywords } = await request.json();
 
 
 		if (!brandData || !platform || !contentType || !adGoal ) {
@@ -28,26 +28,41 @@ export async function POST(request: NextRequest) {
 
 		console.log(user);
 
-		console.log(brandData);
+		console.log(platform);
+		console.log(contentType);
+		console.log(adGoal);
+		console.log(targetAudience);
+		console.log(language);
+		console.log(keywords);
 
+		console.log("branddata", brandData)
+		console.log("brandid", brandData._id)
+		console.log(user.id)
 
 		const brand = await BrandSetupModel.findOne({
 			userId: user._id,
-			brandName: brandData,
+			_id: brandData.id
 		});
 
 		if (!brand) {
 			return NextResponse.json({ success: false, message: "Your Brand not found, Please add your brand first" }, { status: 404 });
 		}
 
+		console.log("brand", brand)
+
+
 		const generatedContentResponse = await aiGeneratedAdsCaption({
 			platform,
-			brandName: brandData,
+			brandName: brand.brandName,
 			contentType,
 			adGoal,
-			additionalInfo,
+			targetAudience,
+			language,
+			keywords,
 			brandDescription: brand.brandDescription
 		});
+
+		console.log("generatedcontentresponse",generatedContentResponse);
 
 		if (!generatedContentResponse) {
 			return NextResponse.json({ success: false, message: "Failed to generate ads caption" }, { status: 500 });
@@ -76,6 +91,10 @@ export async function POST(request: NextRequest) {
 
 
 	} catch (error) {
+
+		console.log(error)
+
+		return NextResponse.json({ success: false, message: "Failed to generate ads caption" }, { status: 500 });
 
 	}
 

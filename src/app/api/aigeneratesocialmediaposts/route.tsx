@@ -42,8 +42,6 @@ export async function POST(request: NextRequest) {
 
 		// Send data to Gemini AI API for content generation
 
-		console.log("fine")
-
 		const generatedContentResponse = await GeminiApiSocialMediaPostGeneration({
 			platform,
 			contentType,
