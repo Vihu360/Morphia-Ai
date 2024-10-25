@@ -74,5 +74,5 @@ export const projects: Project[] = [
 		description: "A streaming service that offers a wide variety of award-winning TV shows.",
 		link: "/seo",
 	},
-	// ... add other projects as needed
+	
 ];

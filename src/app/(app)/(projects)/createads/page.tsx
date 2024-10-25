@@ -8,6 +8,8 @@ import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import html2canvas from 'html2canvas';
 import takeScreenshot from '@/helpers/takescreenshot';
+import { Loader2 } from 'lucide-react';
+import { set } from 'mongoose';
 
 
 interface BackgroundOption {
@@ -107,6 +109,7 @@ export default function AdCreator(): JSX.Element {
 	const [language, setLanguage] = useState("English");
 	const [keywords, setKeywords] = useState(" ");
 	const [targetAudience, setTargetAudience] = useState(" ");
+	const [isGeneratetextSubmitting, setGenerateTextSubmitting] = useState(false);
 	const { toast } = useToast();
 
 	// refs
@@ -260,6 +263,8 @@ export default function AdCreator(): JSX.Element {
 
 	const handleGenerateCaption = async () => {
 
+		setGenerateTextSubmitting(true)
+
 		try {
 
 			const response = await axios.post('/api/aigeneratedadscaption', { brandData:selectBrand , adGoal, platform, contentType, language, keywords, targetAudience })
@@ -273,6 +278,9 @@ export default function AdCreator(): JSX.Element {
 
 			console.log("error", error)
 
+		}
+		finally {
+			setGenerateTextSubmitting(false);
 		}
 
 	};
@@ -369,7 +377,7 @@ export default function AdCreator(): JSX.Element {
 									{caption}
 								</button>
 							))}
-							<button className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg flex items-center justify-center">Generate more</button>
+							<button onClick={() => alert("This feature is coming quick soon")} className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg flex items-center justify-center">Generate more</button>
 							<button  onClick={captureScreenshot} className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg flex items-center justify-center">Download the final picture</button>
 						</div>
 					</div>
@@ -377,7 +385,7 @@ export default function AdCreator(): JSX.Element {
 				(
 			<div className=" w-full h-[89%] sm:h-[84%] border-dotted border-t-4 border-black p-5 flex flex-col gap-3 sm:justify-center sm:items-center sm:px-12">
 
-				<div className='w-full flex items-center justify-center border '>
+				<div className='w-full flex items-center justify-center  '>
 					<div className='w-full flex flex-col items-start justify-center gap-1'>
 
 						<label className='' htmlFor='platform-select' >where you want to run your ad ?</label>
@@ -474,18 +482,12 @@ export default function AdCreator(): JSX.Element {
 
 				</div>
 
-				<button onClick={() => handleGenerateCaption()} className='w-full bg-purple-600 flex justify-center items-center p-2 mt-2 rounded'>
-					<p>Generate texts with Ai</p>
-				</button>
+				<button onClick={() => handleGenerateCaption()} className='w-full bg-purple-600 flex justify-center items-center p-2 mt-2 rounded'>{isGeneratetextSubmitting ? <Loader2 className='w-4 h-4 animate-spin' /> : 'Generate texts with Ai'}</button>
+
 
 			</div>
 				)}
-
-
 		</div>
-
-
-
 	)
 
 	return (
