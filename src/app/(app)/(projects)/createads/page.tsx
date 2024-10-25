@@ -6,6 +6,9 @@ import { Upload, Edit } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 import axios from 'axios';
 import { Input } from '@/components/ui/input';
+import html2canvas from 'html2canvas';
+import takeScreenshot from '@/helpers/takescreenshot';
+
 
 interface BackgroundOption {
 	id: string;
@@ -82,6 +85,7 @@ const selectLanguage = {
 }
 
 export default function AdCreator(): JSX.Element {
+
 	const [selectedBackground, setSelectedBackground] = useState<string | null>(null);
 	const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 	const [selectedAspectRatio, setSelectedAspectRatio] = useState<string>('Instagram Story');
@@ -102,14 +106,29 @@ export default function AdCreator(): JSX.Element {
 	const [contentType, setContentType] = useState("Humorous");
 	const [language, setLanguage] = useState("English");
 	const [keywords, setKeywords] = useState(" ");
-	const [targetAudience, setTargetAudience] = useState(" ")
+	const [targetAudience, setTargetAudience] = useState(" ");
 	const { toast } = useToast();
+
+	// refs
+
 	const carouselRef = useRef<HTMLDivElement>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const captionRef = useRef<HTMLDivElement>(null);
 	const resizeStartXRef = useRef(0);
 	const initialWidthRef = useRef(0);
+	const previewRef = useRef<HTMLDivElement>(null);
 
+
+	// downloading feature of images
+
+	const captureScreenshot = () => {
+		takeScreenshot("screen-for-ads");
+	}
+
+
+
+
+	//
 
 	const fetchAllBrands = async () => {
 		try {
@@ -351,7 +370,7 @@ export default function AdCreator(): JSX.Element {
 								</button>
 							))}
 							<button className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg flex items-center justify-center">Generate more</button>
-							<button className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg flex items-center justify-center">Download the final picture</button>
+							<button  onClick={captureScreenshot} className="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg flex items-center justify-center">Download the final picture</button>
 						</div>
 					</div>
 				):
@@ -498,6 +517,7 @@ export default function AdCreator(): JSX.Element {
 				</div>
 				<div className="flex-grow flex items-center justify-center border">
 					<div
+						id="screen-for-ads"
 						className={`bg-gray-800 rounded-lg relative border`}
 						style={{
 							width: '100%',
@@ -513,37 +533,37 @@ export default function AdCreator(): JSX.Element {
 									alt="Uploaded background"
 									fill
 									className="rounded-lg"
-									sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Define sizes
-									style={{ objectFit: 'cover' }} // Use CSS for object fit
+									sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+									style={{ objectFit: 'cover' }}
 								/>
 							) : selectedBackground ? (
-								<>
+								<div>
 									{/* Background Image */}
 									<Image
 										src={backgroundOptions.find((bg) => bg.id === selectedBackground)?.src ?? ''}
 										alt="Selected background"
 										fill
 										className="rounded-lg"
-										sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Define sizes
-										style={{ objectFit: 'cover' }} // Use CSS for object fit
+										sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+										style={{ objectFit: 'cover' }}
 									/>
 									{/* Overlay Image with 25% Transparency */}
 									<Image
-										src="/black.jpg" // Replace with your overlay image path
+										src="/black.jpg"
 										alt="Overlay image"
 										fill
-										sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Define sizes
+										sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 										style={{
-											objectFit: 'cover', // Use CSS for object fit
-											opacity: 0.55,
+											objectFit: 'cover',
+											opacity: 0.35,
 											position: 'absolute',
 											top: 0,
 											left: 0,
-											zIndex: 1, // Keeps the overlay on top of the background
+											zIndex: 1,
 										}}
 										className="rounded-lg"
 									/>
-								</>
+								</div>
 							) : (
 								<div className="w-full h-full flex items-center justify-center text-gray-400">
 									Select a background or upload an image
@@ -551,26 +571,21 @@ export default function AdCreator(): JSX.Element {
 							)}
 						</div>
 
-
-						{/* Text and other elements always on top */}
-
-						{selectedAspectRatio === 'Instagram Story' ? (
-
-							<div className="absolute top-4 left-4 right-4 flex justify-between items-center z-10 ">
+						{/* Text and other elements */}
+						{selectedAspectRatio === 'Instagram Story' && (
+							<div className="absolute top-4 left-4 right-4 flex justify-between items-center z-10">
 								<div className="flex items-center">
 									<div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full"></div>
 									<span className="ml-2 text-sm font-semibold">Your Brand Here</span>
 								</div>
 								<span className="text-xs">Sponsored</span>
 							</div>
-
-						) : ('')}
-
+						)}
 
 						{/* Caption */}
 						<div
 							ref={captionRef}
-							className={` absolute ${isEditing ? ' cursor-move' : 'cursor-default'}  font-semibold z-10`}
+							className={`absolute ${isEditing ? 'cursor-move' : 'cursor-default'} font-semibold z-10`}
 							style={{
 								left: captionPosition.x,
 								bottom: captionPosition.y,
@@ -581,37 +596,30 @@ export default function AdCreator(): JSX.Element {
 								overflow: 'hidden',
 							}}
 						>
-							<div className=''>
-
-
+							<div>
 								{isEditing && (
 									<>
 										<div className="resize-handle left-handle absolute left-0 top-0 w-2 h-full cursor-ew-resize bg-blue-500 opacity-50" />
 										<div className="resize-handle right-handle absolute right-0 top-0 w-2 h-full cursor-ew-resize bg-blue-500 opacity-50" />
 									</>
 								)}
-								{selectedBackground === null ? ('') : (selectAiGeneratedAdCaption)}
+								{selectedBackground !== null && selectAiGeneratedAdCaption}
 							</div>
 						</div>
 
 						{/* Bottom Buttons */}
-
-						{selectedAspectRatio === 'Instagram Story' ? (
-							<div className="absolute bottom-4 left-4 right-4 z-10 ">
+						{selectedAspectRatio === 'Instagram Story' && (
+							<div className="absolute bottom-4 left-4 right-4 z-10">
 								<div className="flex justify-between">
-									<button className="bg-black text-white px-4 py-2 rounded-full text-sm">
-										Get offer
-									</button>
-									<button className="bg-black p-2 rounded-full">
+									<div className="bg-black text-white px-4 py-2 rounded-full text-sm">Get offer</div>
+									<div className="bg-black p-2 rounded-full">
 										<Upload className="w-4 h-4" />
-									</button>
+									</div>
 								</div>
 							</div>
-						) : ('')}
-
+						)}
 					</div>
 				</div>
-
 
 				{isEditing && (
 					<div className="mt-4 flex flex-col gap-2">
@@ -632,6 +640,7 @@ export default function AdCreator(): JSX.Element {
 					</div>
 				)}
 			</div>
+
 		</div>
 	);
 }

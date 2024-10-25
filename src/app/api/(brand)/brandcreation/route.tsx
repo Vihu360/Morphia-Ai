@@ -14,13 +14,6 @@ export async function POST(req: NextRequest) {
 
 		const refreshToken = req.cookies.get('refreshToken')?.value;
 
-		if (!refreshToken || refreshToken === '') {
-			return NextResponse.json({
-				success: false,
-				message: "Please login/signup first",
-			}, { status: 400 });
-		}
-
 		const user = await takingUserFromRefreshToken(refreshToken);
 
 		console.log(refreshToken);

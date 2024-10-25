@@ -10,7 +10,7 @@ export const takingUserFromRefreshToken = async (refreshToken: any) => {
 	if (!refreshToken) {
 		return NextResponse.json(
 			{ success: false, message: "No refresh token found" },
-			{ status: 400 }
+			{ status: 400 },
 		);
 	}
 
